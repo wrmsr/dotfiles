@@ -33,6 +33,8 @@
 ;; scala-mode2-20150617.2350
 ;; yaml-mode-20141125.37
 
+;; https://github.com/tkf/emacs-jedi
+
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
