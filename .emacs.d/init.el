@@ -1,3 +1,6 @@
+;; TODO:
+;; sort-lines
+
 ;; afternoon-theme-20140104.1059
 ;; auto-complete-20150225.715
 ;; browse-kill-ring-20150104.1237
@@ -16,11 +19,19 @@
 ;; maxframe-20140916.754
 ;; popup-20150116.1223
 ;; smex-20141210.1422
-;; smex-readme.txt
 ;; undo-tree-20140509.522
 ;; vkill-20091203.1022
 ;; vline-20120108.1245
 ;; window-number-20140124.302
+
+;; emacs-eclim-20140809.207
+;; erlang-20150319.456
+;; evil-20150313.1208
+;; go-mode-20150817.2318
+;; popup-20150315.612
+;; s-20140910.334
+;; scala-mode2-20150617.2350
+;; yaml-mode-20141125.37
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
