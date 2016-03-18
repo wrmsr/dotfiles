@@ -1133,3 +1133,22 @@ Symbols matching the text at point are put first in the completion list."
 (define-key occur-mode-map "A-p" 'goto-line)
 
 (define-key package-menu-mode-map "0" 'move-beginning-of-line)
+
+(defun string/ends-with (string suffix)
+  "Return t if STRING ends with SUFFIX."
+  (and (string-match (rx-to-string `(: ,suffix eos) t)
+                     string)
+       t))
+
+(defun string/starts-with (string prefix)
+  "Return t if STRING starts with prefix."
+  (and (string-match (rx-to-string `(: bos ,prefix) t)
+                     string)
+                  t))
+
+(let ((funclist ()))
+  (mapatoms
+   (lambda (x)
+     (when (and (fboundp x) (string/starts-with (symbol-name x) "newsticker-"))
+       (makunbound x)
+       (fmakunbound x))))
