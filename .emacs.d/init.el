@@ -1,6 +1,3 @@
-;; TODO:
-;; sort-lines
-
 ;; afternoon-theme-20140104.1059
 ;; auto-complete-20150225.715
 ;; browse-kill-ring-20150104.1237
@@ -39,9 +36,10 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("marmalade" . "https://marmalade-repo.org/packages/")
-			 ("melpa" . "http://melpa.milkbox.net/packages/")))
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("marmalade" . "https://marmalade-repo.org/packages/")
+        ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -1056,6 +1054,14 @@ Symbols matching the text at point are put first in the completion list."
 (global-set-key (kbd "C-x c") 'sunrise)
 
 (when (boundp 'evil-mode)
+  (defun evil-search-symbol-backward ()
+    (interactive)
+    (evil-search-word nil nil t))
+  
+  (defun evil-search-symbol-forward ()
+    (interactive)
+    (evil-search-word t nil t))
+
   (define-key evil-replace-state-map "\C-l" 'evil-normal-state)
   (define-key evil-visual-state-map "\C-l" 'evil-normal-state)
   (define-key evil-operator-state-map "\C-l" 'evil-normal-state)
@@ -1089,6 +1095,9 @@ Symbols matching the text at point are put first in the completion list."
   (define-key evil-normal-state-map "=" 'evil-scroll-page-down)
   (define-key evil-normal-state-map "-" 'evil-scroll-page-up)
   (define-key evil-normal-state-map "\\" 'evil-indent)
+
+  (define-key evil-normal-state-map "*" 'evil-search-symbol-forward)
+  (define-key evil-normal-state-map "#" 'evil-search-symbol-back)
 
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt))
@@ -1151,4 +1160,4 @@ Symbols matching the text at point are put first in the completion list."
    (lambda (x)
      (when (and (fboundp x) (string/starts-with (symbol-name x) "newsticker-"))
        (makunbound x)
-       (fmakunbound x))))
+       (fmakunbound x)))))
