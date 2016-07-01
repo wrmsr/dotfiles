@@ -661,6 +661,8 @@
   (interactive)
   (eshell t))
 
+(defun eshell-banner-initialize ())
+
 (defun delete-leading-whitespace (start end)
   "Delete whitespace at the beginning of each line in region."
   (interactive "*r")
@@ -1054,7 +1056,7 @@ Symbols matching the text at point are put first in the completion list."
 (global-set-key (kbd "C-x c") 'sunrise)
 
 (when (boundp 'evil-mode)
-  (defun evil-search-symbol-backward ()
+  (defun evil-search-symbol-back ()
     (interactive)
     (evil-search-word nil nil t))
   
