@@ -1163,3 +1163,6 @@ Symbols matching the text at point are put first in the completion list."
      (when (and (fboundp x) (string/starts-with (symbol-name x) "newsticker-"))
        (makunbound x)
        (fmakunbound x)))))
+
+(set-face-background 'col-highlight (face-background 'hl-line))
+(setq col-highlight-vline-face-flag t)
