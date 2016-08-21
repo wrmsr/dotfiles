@@ -81,6 +81,7 @@
   (blink-cursor-mode -1))
 
 (setq window-min-width 120)
+(setq window-min-height 80)
 
 (setq border-width 0)
 ;; (set-face-foreground 'vertical-border "#000000")
@@ -657,6 +658,7 @@
 	  (setq window-min-width previous-window-min-width)
 	  (setq window-min-height previous-window-min-height))))
 
+(require 'eshell)
 (defun new-eshell ()
   (interactive)
   (eshell t))
