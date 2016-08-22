@@ -1001,6 +1001,11 @@ Symbols matching the text at point are put first in the completion list."
     (when gitexes
       (setq magit-git-executable (car gitexes)))))
 
+(defadvice magit-key-mode
+    (around magit-key-mode-damn-it activate compile)
+  (let ((window-min-height 1))
+    ad-do-it))
+
 ;; (require 'eval-expr)
 ;; (eval-expr-install)
 ;; (setq eval-expr-print-length 1000)
