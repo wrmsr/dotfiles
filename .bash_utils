@@ -45,3 +45,33 @@ fix-routes() {
     sudo networksetup -setv4off Wi-Fi
     sudo networksetup -setdhcp Wi-Fi
 }
+
+docker-env() {
+    eval $(docker-machine env "$@")
+}
+
+github-clone() {
+    VARS=$(python -c \
+           'import sys, re; (_, arg) = sys.argv; d = re.match(r"((http(s)?://)?(www\./)?github(\.com)?/)?(?P<user>[^/\.]+)/(?P<repo>[^/\.]+)(/.*)?", arg).groupdict(); print("%s %s" % (d["user"], d["repo"]))' "$@")
+    RESULT=$?
+    if [ $RESULT -ne 0 ] ; then
+       return $RESULT
+    fi
+    USER=$(echo $VARS | awk '{print $1}')
+    REPO=$(echo $VARS | awk '{print $2}')
+    if [ ! -d "$USER" ] ; then
+        mkdir "$USER" || {
+            echo "Failed to make directory $USER"
+            return 1
+        }
+    fi
+    git clone "https://www.github.com/$USER/$REPO" "$USER/$REPO"
+    RESULT=$?
+    if [ $RESULT -ne 0 ] ; then
+        return $RESULT
+    fi
+    cd "$USER/$REPO" || {
+        return 1
+    }
+    return 0
+}
