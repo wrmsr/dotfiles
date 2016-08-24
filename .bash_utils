@@ -1,3 +1,5 @@
+# -*- mode: shell-script -*-
+
 # http://unix.stackexchange.com/a/9124
 mkcd () {
     case "$1" in
@@ -24,4 +26,22 @@ hg-update-all() {
 
 brew-up() {
     brew update ; brew upgrade ; brew cleanup
+}
+
+git-diff-stat() {
+    git diff --color=always --stat=1024 "$@" | sort | cat
+}
+
+kill-chrome-gpu() {
+    ps auxw | egrep -i chrom | egrep '\-\-type=\gpu\-process' | awk '{print $2}' | xargs -n 1 kill
+}
+
+fix-dns() {
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+}
+
+fix-routes() {
+    sudo networksetup -setv4off Wi-Fi
+    sudo networksetup -setdhcp Wi-Fi
 }
