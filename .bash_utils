@@ -80,3 +80,11 @@ github-clone() {
     }
     return 0
 }
+
+function wifi-off() {
+    networksetup -setairportpower en0 off
+}
+
+function wifi-on() {
+    networksetup -setairportpower en0 on
+}
