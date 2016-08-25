@@ -50,6 +50,11 @@ docker-env() {
     eval $(docker-machine env "$@")
 }
 
+docker-cleanup() {
+    docker rm $(docker ps -a -q)
+    docker rmi $(docker images -q -f dangling=true)
+}
+
 github-clone() {
     VARS=$(python -c \
            'import sys, re; (_, arg) = sys.argv; d = re.match(r"((http(s)?://)?(www\./)?github(\.com)?/)?(?P<user>[^/\.]+)/(?P<repo>[^/\.]+)(/.*)?", arg).groupdict(); print("%s %s" % (d["user"], d["repo"]))' "$@")
