@@ -51,8 +51,14 @@ docker-env() {
 }
 
 docker-cleanup() {
-    docker rm $(docker ps -a -q)
-    docker rmi $(docker images -q -f dangling=true)
+    S=$(docker ps -a -q)
+    if [[ $S = *[!\ ]* ]]; then
+        docker rm "$S"
+    fi
+    S=$(docker images -q -f dangling=true)
+    if [[ $S = *[!\ ]* ]]; then
+        docker rmi "$S"
+    fi
 }
 
 github-clone() {
@@ -81,10 +87,10 @@ github-clone() {
     return 0
 }
 
-function wifi-off() {
+wifi-off() {
     networksetup -setairportpower en0 off
 }
 
-function wifi-on() {
+wifi-on() {
     networksetup -setairportpower en0 on
 }
