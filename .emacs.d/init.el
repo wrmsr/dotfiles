@@ -1185,3 +1185,36 @@ Symbols matching the text at point are put first in the completion list."
           (let ((key (match-string-no-properties 1 s))
                 (value (match-string-no-properties 2 s)))
             (setenv key value)))))))
+
+(defun comint-fix-window-size ()
+  "Change process window size."
+  (interactive)
+  (when (derived-mode-p 'comint-mode)
+    (let ((process (get-buffer-process (current-buffer))))
+      (unless (eq nil process)
+        (set-process-window-size process (window-height) (- (window-width) 10))))))
+
+(defun comint-fix-window-size-shell-mode-hook ()
+  (add-hook 'window-configuration-change-hook 'comint-fix-window-size nil t))
+
+(add-hook 'shell-mode-hook 'comint-fix-window-size-shell-mode-hook)
+
+(defcustom linum-disabled-modes-list '(eshell-mode wl-summary-mode compilation-mode org-mode text-mode dired-mode doc-view-mode image-mode)
+  "* List of modes disabled when global linum mode is on"
+  :type '(repeat (sexp :tag "Major mode"))
+  :tag " Major modes where linum is disabled: "
+  :group 'linum)
+
+(defcustom linum-disable-starred-buffers 't
+  "* Disable buffers that have stars in them like *Gnu Emacs*"
+  :type 'boolean
+  :group 'linum)
+
+(defun linum-on ()
+  "* When linum is running globally, disable line number in modes defined in `linum-disabled-modes-list'. Changed by linum-off. Also turns off numbering in starred modes like *scratch*"
+
+  (unless (or (minibufferp)
+              (member major-mode linum-disabled-modes-list)
+              (string-match "*" (buffer-name))
+              (> (buffer-size) 3000000)) ;; disable linum on buffer greater than 3MB, otherwise it's unbearably slow
+    (linum-mode 1)))
