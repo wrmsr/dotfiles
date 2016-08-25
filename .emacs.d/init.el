@@ -53,6 +53,7 @@
 (require 'thingatpt)
 (require 'imenu)
 (require 'dired)
+(require 's)
 
 (require 'darkburn-theme)
 
