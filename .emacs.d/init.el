@@ -1173,3 +1173,15 @@ Symbols matching the text at point are put first in the completion list."
 
 (set-face-background 'col-highlight (face-background 'hl-line))
 (setq col-highlight-vline-face-flag t)
+
+(defun eshell/docker-env (&rest args)
+    (interactive)
+    (let* ((output (shell-command-to-string "docker-machine env"))
+           (split (split-string output "[\n]+")))
+      (dolist (s split)
+        (let ((s (chomp s)))
+          (save-match-data
+            (when (string-match "^export \\([[:ascii:]]+\\)=\"\\(.*\\)\"$" s)
+              (let ((key (match-string-no-properties 1 s))
+                    (value (match-string-no-properties 2 s)))
+                (setenv key value))))))))
