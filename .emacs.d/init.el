@@ -1175,13 +1175,13 @@ Symbols matching the text at point are put first in the completion list."
 (setq col-highlight-vline-face-flag t)
 
 (defun eshell/docker-env (&rest args)
-    (interactive)
-    (let* ((output (shell-command-to-string "docker-machine env"))
-           (split (split-string output "[\n]+")))
-      (dolist (s split)
-        (let ((s (chomp s)))
-          (save-match-data
-            (when (string-match "^export \\([[:ascii:]]+\\)=\"\\(.*\\)\"$" s)
-              (let ((key (match-string-no-properties 1 s))
-                    (value (match-string-no-properties 2 s)))
-                (setenv key value))))))))
+  (interactive)
+  (let* ((cmd (mapconcat 'identity (append '("docker-machine" "env") args) " "))
+         (output (shell-command-to-string cmd))
+         (split (mapcar 'chomp (split-string output "[\n]+"))))
+    (dolist (s split)
+      (save-match-data
+        (when (string-match "^export \\([[:ascii:]]+\\)=\"\\(.*\\)\"$" s)
+          (let ((key (match-string-no-properties 1 s))
+                (value (match-string-no-properties 2 s)))
+            (setenv key value)))))))
