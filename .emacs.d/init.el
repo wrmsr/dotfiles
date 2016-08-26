@@ -162,7 +162,7 @@
   (setq interprogram-cut-function 'paste-to-osx)
   (setq interprogram-paste-function 'copy-from-osx)
 
-  (set-exec-path-from-shell-PATH)
+  ; (set-exec-path-from-shell-PATH)
   (setq system-name (car (split-string system-name "\\.")))
 
   (when (and window-system (not (equal window-system 'x)))
