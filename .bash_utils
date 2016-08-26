@@ -1,4 +1,5 @@
 # -*- mode: shell-script -*-
+# TODO: caffiene off + mute sound + kill-chrome-gpu + i-gpu + wifi off
 
 # http://unix.stackexchange.com/a/9124
 mkcd () {
@@ -87,10 +88,30 @@ github-clone() {
     return 0
 }
 
+wifi-on() {
+    networksetup -setairportpower en0 on
+}
+
 wifi-off() {
     networksetup -setairportpower en0 off
 }
 
-wifi-on() {
-    networksetup -setairportpower en0 on
+caffeine-on() {
+    osascript <<EOF
+tell application "Caffeine"
+    turn on
+end tell
+EOF
+}
+
+caffeine-off() {
+    osascript <<EOF
+tell application "Caffeine"
+    turn off
+end tell
+EOF
+}
+
+sound-off() {
+    osascript -e "set Volume 0"
 }
