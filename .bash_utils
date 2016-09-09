@@ -62,6 +62,10 @@ docker-cleanup() {
     fi
 }
 
+docker-bash() {
+    docker exec --detach-keys 'ctrl-o,ctrl-d' -it "$@" bash
+}
+
 github-clone() {
     VARS=$(python -c \
            'import sys, re; (_, arg) = sys.argv; d = re.match(r"((http(s)?://)?(www\./)?github(\.com)?/)?(?P<user>[^/\.]+)/(?P<repo>[^/\.]+)(/.*)?", arg).groupdict(); print("%s %s" % (d["user"], d["repo"]))' "$@")
