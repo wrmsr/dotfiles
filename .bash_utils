@@ -52,14 +52,8 @@ docker-env() {
 }
 
 docker-cleanup() {
-    S=$(docker ps -a -q)
-    if [[ $S = *[!\ ]* ]]; then
-        docker rm "$S"
-    fi
-    S=$(docker images -q -f dangling=true)
-    if [[ $S = *[!\ ]* ]]; then
-        docker rmi "$S"
-    fi
+    docker ps -a -q | xargs -n 1 docker rm
+    docker images -q -f dangling=true | xargs -n 1 docker rmi
 }
 
 docker-bash() {
