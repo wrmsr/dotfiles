@@ -119,3 +119,7 @@ EOF
 sound-off() {
     osascript -e "set Volume 0"
 }
+
+guess-go-root() {
+    sh -c 'set -e ; cd $(dirname $(which go)) ; cd $(dirname $(readlink $(which go))) ; cd ../libexec ; pwd'
+}
