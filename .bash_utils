@@ -1,6 +1,8 @@
 # -*- mode: shell-script -*-
 # TODO: caffiene off + mute sound + kill-chrome-gpu + i-gpu + wifi off
 
+## general
+
 # http://unix.stackexchange.com/a/9124
 mkcd () {
     case "$1" in
@@ -13,57 +15,22 @@ mkcd () {
     esac
 }
 
+
+## code
+
+guess-go-root() {
+    sh -c 'set -e ; cd $(dirname $(which go)) ; cd $(dirname $(readlink $(which go))) ; cd ../libexec ; pwd'
+}
+
+
+## vcs
+
 git-push-origin() {
     git add . && git commit -m -- && git push origin
 }
 
 git-update-all() {
     for d in $(find . ! -name '.' -maxdepth 1 -type d) ; do cd "$d" ; git status ; git pull origin ; cd .. ; done
-}
-
-hg-update-all() {
-    for d in $(find . -type d -maxdepth 1 -not -name '.*') ; do echo $d; cd $d; hg pull; hg update; cd ..; done
-}
-
-brew-up() {
-    brew update ; brew upgrade ; brew cleanup
-}
-
-git-diff-stat() {
-    git diff --color=always --stat=1024 "$@" | sort | cat
-}
-
-kill-chrome-gpu() {
-    ps auxw | egrep -i chrom | egrep '\-\-type=\gpu\-process' | awk '{print $2}' | xargs -n 1 kill
-}
-
-fix-dns() {
-    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
-    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
-}
-
-fix-routes() {
-    sudo networksetup -setv4off Wi-Fi
-    sudo networksetup -setdhcp Wi-Fi
-}
-
-docker-env() {
-    eval $(docker-machine env "$@")
-}
-
-docker-cleanup() {
-    S=$(docker ps -a -q)
-    if [[ $S = *[!\ ]* ]]; then
-        docker rm "$S"
-    fi
-    S=$(docker images -q -f dangling=true)
-    if [[ $S = *[!\ ]* ]]; then
-        docker rmi "$S"
-    fi
-}
-
-docker-bash() {
-    docker exec --detach-keys 'ctrl-o,ctrl-d' -it "$@" bash
 }
 
 github-clone() {
@@ -90,6 +57,68 @@ github-clone() {
         return 1
     }
     return 0
+}
+
+hg-update-all() {
+    for d in $(find . -type d -maxdepth 1 -not -name '.*') ; do echo $d; cd $d; hg pull; hg update; cd ..; done
+}
+
+
+## docker
+
+docker-machine-setup() {
+    docker-machine create default \
+        -d virtualbox \
+        --virtualbox-cpu-count "4" \
+        --virtualbox-memory "2048" \
+        --virtualbox-disk-size "20000"
+}
+
+docker-env() {
+    eval $(docker-machine env "$@")
+}
+
+docker-cleanup() {
+    docker ps --no-trunc -a -q -f status=exited | xargs -n 1 docker rm
+    docker images -q -f dangling=true | xargs -n 1 docker rmi
+}
+
+docker-bash() {
+    docker exec --detach-keys 'ctrl-o,ctrl-d' -it "$@" bash
+}
+
+docker-root() {
+    docker run --privileged --security-opt seccomp:unconfined "$@"
+}
+
+docker-start-sandbox() {
+    docker pull ubuntu
+    docker-root -itd ubuntu bash
+}
+
+
+## osx
+
+brew-up() {
+    brew update ; brew upgrade ; brew cleanup
+}
+
+git-diff-stat() {
+    git diff --color=always --stat=1024 "$@" | sort | cat
+}
+
+kill-chrome-gpu() {
+    ps auxw | egrep -i chrom | egrep '\-\-type=\gpu\-process' | awk '{print $2}' | xargs -n 1 kill
+}
+
+fix-dns() {
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+}
+
+fix-routes() {
+    sudo networksetup -setv4off Wi-Fi
+    sudo networksetup -setdhcp Wi-Fi
 }
 
 wifi-on() {
