@@ -100,6 +100,10 @@ wifi-off() {
     networksetup -setairportpower en0 off
 }
 
+wifi-reset() {
+    wifi-off ; wifi-on
+}
+
 caffeine-on() {
     osascript <<EOF
 tell application "Caffeine"
