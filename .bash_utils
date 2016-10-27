@@ -91,6 +91,10 @@ docker-root() {
     docker run --privileged --security-opt seccomp:unconfined "$@"
 }
 
+docker-launch() {
+    docker run -itd "$@" bash
+}
+
 docker-start-sandbox() {
     docker pull ubuntu
     docker-root -itd ubuntu bash
