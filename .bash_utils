@@ -34,6 +34,7 @@ git-update-all() {
 }
 
 github-clone() {
+    # TODO: git clone git@github.com:user/repo.git
     VARS=$(python -c \
            'import sys, re; (_, arg) = sys.argv; d = re.match(r"((http(s)?://)?(www\./)?github(\.com)?/)?(?P<user>[^/\.]+)/(?P<repo>[^/\.]+)(/.*)?", arg).groupdict(); print("%s %s" % (d["user"], d["repo"]))' "$@")
     RESULT=$?
