@@ -15,6 +15,10 @@ mkcd () {
     esac
 }
 
+install-ssh-agent () {
+    eval "$(ssh-agent -s)"
+}
+
 
 ## code
 
