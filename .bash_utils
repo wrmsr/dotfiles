@@ -105,6 +105,10 @@ docker-start-sandbox() {
     docker-root -itd ubuntu bash
 }
 
+docker-stop-all() {
+    docker ps | tail -n +2 | awk '{print $1}' | xargs -n 1 docker stop
+}
+
 
 ## osx
 
