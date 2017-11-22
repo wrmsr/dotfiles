@@ -109,6 +109,10 @@ docker-stop-all() {
     docker ps | tail -n +2 | awk '{print $1}' | xargs -n 1 docker stop
 }
 
+docker-ubuntu() {
+    docker run -it --privileged --userns=host --pid=host --network=host ubuntu bash
+}
+
 
 ## osx
 
