@@ -71,18 +71,6 @@ hg-update-all() {
 
 ## docker
 
-docker-machine-setup() {
-    docker-machine create default \
-        -d virtualbox \
-        --virtualbox-cpu-count "4" \
-        --virtualbox-memory "2048" \
-        --virtualbox-disk-size "20000"
-}
-
-docker-env() {
-    eval $(docker-machine env "$@")
-}
-
 docker-cleanup() {
     docker ps --no-trunc -a -q -f status=exited | xargs -n 1 docker rm
     docker images -q -f dangling=true | xargs -n 1 docker rmi
@@ -111,6 +99,10 @@ docker-stop-all() {
 
 docker-ubuntu() {
     docker run -it --privileged --userns=host --pid=host --network=host ubuntu bash
+}
+
+docker-vm() {
+    screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty    
 }
 
 function docker-trace-cmd() {
