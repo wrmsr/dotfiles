@@ -30,7 +30,7 @@ guess-go-root() {
 ## vcs
 
 git-push-origin() {
-    git add . && git commit -m -- && git push origin
+    git add . && git commit --no-verify -m -- && git push --no-verify origin
 }
 
 git-update-all() {
