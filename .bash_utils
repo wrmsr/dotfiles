@@ -26,6 +26,10 @@ guess-go-root() {
     sh -c 'set -e ; cd $(dirname $(which go)) ; cd $(dirname $(readlink $(which go))) ; cd ../libexec ; pwd'
 }
 
+get-java-home() {
+    java -XshowSettings:properties 2>&1 | egrep '^[ ]*java\.home = ' | rev | egrep -o '^[^=]+' | rev | sed -e 's/^[[:space:]]*//'
+}
+
 
 ## vcs
 
