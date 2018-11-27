@@ -33,7 +33,7 @@
       (print p)
       (unless updated
         (package-refresh-contents)
-        (setq updated 't))
+        (setq updated t))
       (package-install p))))
 
 (require 'darkburn-theme)
