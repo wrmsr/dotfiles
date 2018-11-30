@@ -1,0 +1,171 @@
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+(unless window-system
+  (setq linum-format "%d "))
+
+(require 'package)
+
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+		    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t))
+
+(package-initialize)
+
+(require 'cl)
+
+(let
+    ((packages '(
+		 auto-compile
+		 browse-kill-ring
+		 buffer-move
+		 evil
+		 magit
+		 s
+		 undo-tree
+		 ))
+     (updated))
+  (dolist (p packages)
+    (unless (package-installed-p p)
+      (print p)
+      (unless updated
+	(package-refresh-contents)
+	(setq updated t))
+      (package-install p))))
+
+(require 'darkburn-theme)
+(require 'window-number)
+
+(require 's)
+
+(defun chomp (str)
+  "Chomp leading and tailing whitespace from STR."
+  (let ((s (if (symbolp str) (symbol-name str) str)))
+    (replace-regexp-in-string "\\(^[[:space:]\n]*\\|[[:space:]\n]*$\\)" "" s)))
+
+(defun filter (condp lst)
+  (delq nil
+	(mapcar (lambda (x) (and (funcall condp x) x)) lst)))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (s browse-kill-ring buffer-move evil magit undo-tree auto-compile))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(setq eval-expression-print-length 1000)
+
+(setq ring-bell-function 'ignore
+      inhibit-startup-message t
+      echo-keystrokes 0.1
+      font-lock-maximum-decoration t
+      transient-mark-mode t
+      color-theme-is-global t
+      ;; shift-select-mode t
+      delete-selection-mode t
+      require-final-newline t
+      ffap-machine-p-known 'reject
+      truncate-partial-width-windows nil
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      xterm-mouse-mode t
+      x-select-enable-clipboard t)
+
+(setq scroll-margin 7
+      scroll-step 1
+      scroll-conservatively most-positive-fixnum
+      scroll-preserve-screen-position 1)
+
+(setq fill-column 120)
+(set-fill-column 120)
+(setq split-height-threshold 60)
+
+(random t)
+
+(global-linum-mode t)
+(setq line-number-mode t
+      column-number-mode t)
+
+(size-indication-mode t)
+(auto-compression-mode t)
+(global-font-lock-mode t)
+(recentf-mode 1)
+(show-paren-mode 1)
+
+(setq evil-toggle-key "C-\\")
+(setq evil-default-cursor '("#73d216" t))
+(setq evil-mode-line-format 'before)
+
+(require 'evil)
+(evil-mode)
+
+(when (boundp 'evil-mode)
+  (defun evil-search-symbol-back ()
+    (interactive)
+    (evil-search-word nil nil t))
+  
+  (defun evil-search-symbol-forward ()
+    (interactive)
+    (evil-search-word t nil t))
+
+  (define-key evil-replace-state-map "\C-l" 'evil-normal-state)
+  (define-key evil-visual-state-map "\C-l" 'evil-normal-state)
+  (define-key evil-operator-state-map "\C-l" 'evil-normal-state)
+  ;; (define-key evil-motion-state-map "\C-l" 'evil-esc)
+
+  (define-key evil-insert-state-map "\C-l" 'evil-normal-state)
+  )
+
+(window-number-mode)
+(window-number-meta-mode)
+
+(defun window-number-string ()
+  "Returns the string containing the number of the current window"
+  (propertize
+   (concat " -" (number-to-string (window-number)) "- ")
+   'face
+   'window-number-face))
+
+(set-face-background 'window-number-face "#000000")
+
+(when (equal system-type 'darwin)
+  (window-number-define-keys window-number-meta-mode-map "A-"))
+
+(defun window-number-select (number)
+  "Selects the nth window."
+  (interactive "P")
+  (if (integerp number)
+      (if (= 10 number)
+          (select-window (minibuffer-window))
+        (let ((window (nth (1- number) (window-number-list))))
+          (if (and window (or (not (window-minibuffer-p window))
+                              (minibuffer-window-active-p window)))
+              (select-window window)
+            (error "No such window."))))))
+
+(setq minor-mode-alist
+      (filter
+       '(lambda (x)
+          (not (memq (car x) '(idle-highlight-mode
+                               hi-lock-mode
+                               auto-complete-mode
+                               yas/minor-mode
+                               window-number-meta-mode
+                               window-number-mode))))
+       minor-mode-alist))
+
+(add-to-list 'mode-line-position
+             '(:eval (window-number-string)) t 'eq)
+
