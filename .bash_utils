@@ -105,8 +105,12 @@ docker-ubuntu() {
     docker run -it --privileged --userns=host --pid=host --network=host ubuntu bash
 }
 
-docker-vm() {
-    screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty    
+docker-screen() {
+    screen ~/Library/Containers/com.docker.docker/Data/vms/0/tty
+}
+
+docker-nsenter() {
+    docker run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
 }
 
 function docker-trace-cmd() {
