@@ -179,3 +179,11 @@ EOF
 sound-off() {
     osascript -e "set Volume 0"
 }
+
+kill-vlc() {
+    ps auxw | grep  VLC | grep -v grep | awk '{print $2}' | xargs -n 1 kill -9
+}
+
+clear-preview() {
+    rm -rf ~/Library/Containers/com.apple.Preview/Data/Library/Saved\ Application\ State/com.apple.Preview.savedState
+}
