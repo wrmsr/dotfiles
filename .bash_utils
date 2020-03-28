@@ -131,7 +131,7 @@ brew-up() {
 }
 
 brew-installed() {
-    brew list | tr ' ' '\n' | paste -sd ' ' - | pbcopy
+    brew list | tr ' ' '\n' | paste -sd ' ' -
 }
 
 git-diff-stat() {
