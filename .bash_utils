@@ -130,7 +130,7 @@ brew-up() {
     brew update ; brew upgrade ; brew cleanup
 }
 
-brew-installer() {
+brew-installed() {
     brew list | tr ' ' '\n' | paste -sd ' ' - | pbcopy
 }
 
