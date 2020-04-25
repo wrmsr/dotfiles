@@ -19,6 +19,10 @@ install-ssh-agent () {
     eval "$(ssh-agent -s)"
 }
 
+dir-count () {
+    for d in $(find . -maxdepth 1 -type d -not -name .) ; do echo $(find "$d" | wc -l) "$d" ; done
+}
+
 
 ## code
 
