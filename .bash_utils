@@ -81,6 +81,14 @@ github-clone() {
     return 0
 }
 
+git-clone-rm() {
+    N=$(echo "$@" | rev | cut -d/ -f1 | rev)
+    if [ -z "$N" ] ; then
+        return 1;
+    fi
+    (git clone "$@" && rm -rf "$N/.git")
+}
+
 hg-update-all() {
     for d in $(find . -type d -maxdepth 1 -not -name '.*') ; do echo $d; cd $d; hg pull; hg update; cd ..; done
 }
