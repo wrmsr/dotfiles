@@ -45,6 +45,14 @@ git-update-all() {
     for d in $(find . ! -name '.' -maxdepth 1 -type d) ; do cd "$d" ; git status ; git pull origin ; cd .. ; done
 }
 
+git-branches() {
+    git --no-pager branch --sort=committerdate
+}
+
+git-commits-by-date() {
+    git log --date=short --pretty=format:%ad | sort | uniq -c
+}
+
 git-du() {
   git rev-list --objects --all \
     | git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' \
